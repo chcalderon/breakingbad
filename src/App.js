@@ -1,28 +1,46 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+// import logo from './logo.svg';
+import axios from 'axios';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+function Frase({frase}) {
+  return (
+    <div className="frase">
+      <h1>{frase.quote}</h1>
+      <p>- {frase.author}</p>
+    </div>
+  )
+}
+
+function App() {
+
+  const [frase, obtenerFrase] = useState({});
+
+  const consultaApi = async () => {
+    const resultado = await axios('http://breaking-bad-quotes.herokuapp.com/v1/quotes');
+    obtenerFrase(resultado.data[0]);
+    // console.log(resultado.data[0]);
+    //Agreegar el resultado de la api al state
   }
+
+  //Consulta a Rest api
+  useEffect(
+    () => {
+      consultaApi()
+    }, []
+  )
+
+  console.log(frase);
+
+  return (
+    <div className="contenedor">
+      <Frase 
+        frase={frase}
+      />
+      <button
+        onClick={consultaApi}
+      >Otra</button>
+    </div>
+    )
 }
 
 export default App;
